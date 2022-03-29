@@ -1,4 +1,0 @@
-//hmm
-public class test {
-
-}
