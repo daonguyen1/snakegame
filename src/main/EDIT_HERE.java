@@ -1,4 +1,9 @@
 package main;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 /**
  * @apiNote
  * Hello, this is where you can write your code!
@@ -21,6 +26,11 @@ package main;
  */
 public class EDIT_HERE {
     
+    Snake_part head = new Snake_head(500,400);
+    Snake_part body1 = new Snake_body(475,400);  
+    static int speed=20;
+    static ArrayList<Snake_part> array = new ArrayList<Snake_part>();
+    
     /**
      * TODO: 
      * This command isn't to be <i> used </i>, <b> it's meant to be read! </b>
@@ -38,7 +48,7 @@ public class EDIT_HERE {
         Lime l = new Lime(x,y);
         
         /**
-         * Now to change the limes position, you can either
+         * Now to change the score position, you can either
          * do this:
          */
         Lime.x = x;
@@ -67,7 +77,7 @@ public class EDIT_HERE {
         head.setY(y);
         body1.setX(x); /** For the body */
         body1.setY(y);
-        
+      
         /** That should be it. The rest of the code is on you. */
     }
     
@@ -82,58 +92,156 @@ public class EDIT_HERE {
     /**
      * Limes counter.
      */
-    public static int limes = 0;
+    public static int score = 0;
     
     /**
      * Runs this command at the very start
      * of each game once.
      */
-    public static void Game_Start() {
-
+    public void Game_Start() {
+        Snake_part.Hierarchy.clear();
+        array.clear();
+        head = new Snake_head(500,400);
+        body1 = new Snake_body(475,400);
+        array.add(0, head);
+        array.add(1, body1);
+        Lime l= new Lime((int)(Math.random()*1040+80),(int)(Math.random()*720+80));
+        
     }
-    /**
+    
+    
+    
+      /**
      * Runs many times per second.
      * Feel free to put anything in here.
      * (Runs 24 times per second).
      */
-    public static void Game_Clock() {
+    public void Game_Clock() { 
+        //Lime newlime = new Lime((int)Math.random() * ( 50 )+950,(int)Math.random() * ( 50 )+950) ;
+        Rectangle a= new Rectangle(head.getX(),head.getY(),25,25);
+        Rectangle b= new Rectangle(Lime.x-10,Lime.y-5,25,25);
         
+        
+        if(head.getDirection()==0) {
+        if(a.intersects(b)){
+            score++;
+            Lime l= new Lime((int)(Math.random()*1040+80),(int)(Math.random()*640+50));
+            array.add(new Snake_body(array.get(array.size()-1).getX(),array.get(array.size()-1).getY()));
+            
+        }
+        Up();
+        }
+        if(head.getDirection()==90) {
+            if(a.intersects(b)){
+                score++;
+                Lime l= new Lime((int)(Math.random()*1040+80),(int)(Math.random()*640+50));
+                array.add(new Snake_body(array.get(array.size()-1).getX(),array.get(array.size()-1).getY()));
+            }
+            Right();
+            }
+        if(head.getDirection()==180) {
+            if(a.intersects(b)){
+                score++;
+                Lime l= new Lime((int)(Math.random()*1040+80),(int)(Math.random()*640+50));
+                array.add(new Snake_body(array.get(array.size()-1).getX(),array.get(array.size()-1).getY()));
+            }
+            Down();
+            }
+        if(head.getDirection()==270) {
+            if(a.intersects(b)){
+                score++;
+                Lime l= new Lime((int)(Math.random()*1040+80),(int)(Math.random()*640+50));
+                array.add(new Snake_body(array.get(array.size()-1).getX(),array.get(array.size()-1).getY()));
+                
+            }
+            Left();
+            }
+       
+         
+
+        
+        if(head.getX()>=1120||head.getX()<=50||head.getY()>=690||head.getY()<40) {
+            Game_Over();
+           
+        
+        }
+    
     }
     
     /**
      * Call this when the snake dies.
      */
-    public static void Game_Over() {
+    public void Game_Over() {
+        array.removeAll(array);
+        head = new Snake_head(500,400);
+        body1 = new Snake_body(450,400);
         sg.Game_Over(); /** DO NOT DELETE THIS */
+        array.add(head);
+        array.add(body1);
         
     }
     
     /**
      * Is Automatically called when up arrow or w is pressed.
      */
-    public static void Up() {
-
+    public void Up() {
+     
+        if(head.getDirection()!=180) {
+            head.setDirection(0);
+        for(int i=array.size()-1;i>0;i--) {      
+           array.get(i).setX(array.get(i-1).getX());
+           array.get(i).setY(array.get(i-1).getY());
+        }
+        
+       head.setY(head.getY()-speed);
+        }
+        
     }
+    
     
     /**
      * Is Automatically called when down arrow or s is pressed.
      */
-    public static void Down() {
-        
+    public void Down() {
+        if(head.getDirection()!=0) {
+            head.setDirection(180);
+        for(int i=array.size()-1;i>0;i--) {
+            array.get(i).setX(array.get(i-1).getX());
+            array.get(i).setY(array.get(i-1).getY());
+         }
+        head.setY(head.getY()+speed);
+        }
     }
     
     /**
      * Is Automatically called when left arrow or a is pressed.
      */
-    public static void Left() {
-        
+    public void Left() {
+        if(head.getDirection()!=90) {
+            head.setDirection(270);
+            for(int i=array.size()-1;i>0;i--) {
+                array.get(i).setX(array.get(i-1).getX());
+                array.get(i).setY(array.get(i-1).getY());
+             }
+        head.setX(head.getX()-speed);
+    }
     }
     
     /**
      * Is Automatically called when right arrow or d is pressed.
      */
-    public static void Right() {
-        
+    public void Right() {
+        //when snake is moving up
+        if(head.getDirection()!=270) {
+            head.setDirection(90);
+            for(int i=array.size()-1;i>0;i--) {
+                array.get(i).setX(array.get(i-1).getX());
+                array.get(i).setY(array.get(i-1).getY());
+             }
+        head.setX(head.getX()+speed);
+        }
+    
     }
+    
    
 }

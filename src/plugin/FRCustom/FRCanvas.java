@@ -23,6 +23,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.accessibility.Accessible;
 import javax.imageio.ImageIO;
@@ -112,7 +113,12 @@ public class FRCanvas extends JPanel implements Accessible {
     private int[][] polygon_yPoints;
 
     public Object[] shapes = new Object[1];
+    public ArrayList<Object> shapes2 = new ArrayList<Object>();
 
+    public FRCanvas(ArrayList<Object> Shapes) {
+        this.shapes2 = Shapes;
+    }
+    
     public FRCanvas(Object[] Shapes) {
         this.shapes = Shapes;
     }
@@ -650,7 +656,10 @@ public class FRCanvas extends JPanel implements Accessible {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-        ;
+        if (shapes2 != null && !shapes2.isEmpty()) {
+            shapes = shapes2.toArray();
+            System.out.println();
+        }
         for (int i = 0 ; i < shapes.length; i++) {
             Object shape = shapes[i];
             if (shape instanceof FRShape3D) {

@@ -20,8 +20,11 @@ public class Snake_head extends Snake_part {
     }
     
     private void appendHierarchy() {
-        Snake_part.Snake_GUI = new FRCanvas(Hierarchy.toArray());
+        //Snake_part.Snake_GUI = new FRCanvas(Hierarchy.toArray());
         Snake_part.Snake_GUI.setOpaque(false);
+        sg.Game_GUI1.setOpaque(false);
+        sg.Game_GUI2.setOpaque(false);
+        
     }
 
     public void setX(int x) {
@@ -39,7 +42,7 @@ public class Snake_head extends Snake_part {
     public void setDirection(int direction) {
         this.direction = direction;
         this.Snake_part_GUI.setShape(new Rectangle2D.Double(this.x, this.y, d.getWidth(), d.getHeight()));
-        this.Snake_part_GUI.setRotationZ(direction);
+        //this.Snake_part_GUI.setRotationZ(direction);
         
     }
 }

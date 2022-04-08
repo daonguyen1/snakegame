@@ -59,7 +59,9 @@ public class sg {
     
     public static final int FPS = 24;
     
-    private static int limes = EDIT_HERE.limes;
+    private static EDIT_HERE EH = new EDIT_HERE();
+    
+    private static int limes = EH.score;
     
     public static boolean Game_switch = false;
     /**
@@ -78,16 +80,16 @@ public class sg {
             public boolean dispatchKeyEvent(KeyEvent e) {
                 if (Game_switch == true) {
                     if (e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_UP) {
-                        EDIT_HERE.Up();
+                        EH.Up();
                     }
                     if (e.getKeyCode() == KeyEvent.VK_S || e.getKeyCode() == KeyEvent.VK_DOWN) {
-                        EDIT_HERE.Down();
+                        EH.Down();
                     }
                     if (e.getKeyCode() == KeyEvent.VK_A || e.getKeyCode() == KeyEvent.VK_LEFT) {
-                        EDIT_HERE.Left();
+                        EH.Left();
                     }
                     if (e.getKeyCode() == KeyEvent.VK_D || e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                        EDIT_HERE.Right();
+                        EH.Right();
                     }
                 }
                 return false;
@@ -197,7 +199,14 @@ public class sg {
         Button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
+                Snake_part body1 = new Snake_body(2000,4000);
+                Lime l = new Lime(1000,10000);
+                SW = 0;
                 Show_Game();
+                EH.Game_Start();
+                EH.score = 0;
+                Game_switch = true;
+                
             }
             
         });
@@ -374,7 +383,7 @@ public class sg {
         Window.refresh();
     }
     
-    public static void Show_Game() {
+    public static void Show_Game() { //System.out.println("ds");
         Window.getContentPane().removeAll(); 
         Object[] Hierarchy2 = new Object[5];
 
@@ -405,7 +414,7 @@ public class sg {
         timer_label.setForeground(Color.white); 
         timer_label.setFont(new Font("Verdana",3,100));
         Hierarchy2[3] = timer_label;
-        
+
         Game_GUI2 = new FRCanvas(Hierarchy2);
         Game_GUI2.setOpaque(false);
         Window.add(Game_GUI2);
@@ -413,8 +422,10 @@ public class sg {
         //Show Snake HERE
         
         
-        Snake_part.Snake_GUI = new FRCanvas();
-        Lime.Spawned_Lime_GUI = new FRCanvas();
+        //Snake_part.Snake_GUI = new FRCanvas();
+        //Lime.Spawned_Lime_GUI = new FRCanvas();
+        
+        
         Snake_part.Snake_GUI.setOpaque(false);
         Lime.Spawned_Lime_GUI.setOpaque(false);
         Window.add(Snake_part.Snake_GUI);
@@ -429,13 +440,23 @@ public class sg {
         Game_GUI1 = new FRCanvas(Hierarchy1);
         Game_GUI1.setOpaque(false);
         Window.add(Game_GUI1);
-        EDIT_HERE.limes = 0;
-        EDIT_HERE.Game_Start();
-        Game_switch = true;
+        
+        
     }
 
     public static void Game_Over() {
         Game_switch = false;
+        
+        try {
+            Thread.sleep(1000/FPS);
+        } catch (InterruptedException e1) {
+            e1.printStackTrace();
+        }
+        //Show_Game();
+        //Window.removeAll();
+        Window.getContentPane().remove(0);
+        Window.getContentPane().remove(0);
+        Window.getContentPane().remove(0);
         scoreToLeaderBoard();
         Show_LeaderBoard_with_Close();
         Window.add(Game_GUI2);
@@ -447,7 +468,7 @@ public class sg {
         
         JLabel Label = new JLabel();
         Label.setBounds(460,240,300,300);
-        Label.setText("Limes: "+limes+" | Time: "+SW);
+        Label.setText("Limes: "+limes+" | Time: "+SW_toString());
         Label.setForeground(Color.yellow); 
         Label.setFont(new Font("Verdana",3,20));
         Hierarchy[10] = Label;
@@ -474,7 +495,7 @@ public class sg {
         FRCanvas GameOver = new FRCanvas(Hierarchy);
         GameOver.setOpaque(false);
         Window.add(GameOver);
-       
+        
         Component[] components = Window.getContentPane().getComponents();
         for (Component component : components) {
             if (component.equals(Menu_GUI)) {
@@ -493,9 +514,11 @@ public class sg {
                 Window.remove(LeaderBoard_GUI); 
                 Window.add(LeaderBoard_GUI);
             }
+        } 
+
+        for (int i = 0; i < Snake_part.Hierarchy.size(); i++) {
+            Snake_part.Hierarchy.remove(0);
         }
-        
-        SW = 0;
     }
     private static void scoreToLeaderBoard() {
         ArrayList<Integer> buffered_lb = new ArrayList<Integer>();
@@ -562,9 +585,12 @@ public class sg {
             try { 
                 Thread.sleep(1000/FPS);
                 if (Game_switch == true) {
-                    EDIT_HERE.Game_Clock();
-                    limes = EDIT_HERE.limes;
+                    
+                    EH.Game_Clock(); 
+                    limes = EH.score;
+                    
                 }
+                
                 Window.refresh();
                 if (Game_switch) {
                     SW += 1; 
